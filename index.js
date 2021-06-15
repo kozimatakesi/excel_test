@@ -16,12 +16,24 @@ const checkDir = (array) => {
 
 const xlsxTest = async () => {
   try {
+    const d = [['あ', 'い', 'う'], ['え', 'お']];
+    const wb = xutil.book_new();
+    const ws = xutil.aoa_to_sheet(d);
+    const ws_name = 'テストシート';
+    xutil.book_append_sheet(wb, ws, ws_name);
+    xlsx.writeFile(wb, 'test.xlsx');
+
+    const new_wb = xlsx.readFile('./test.xlsx');
     const dirPath = '/Users/kawamoto/Desktop/20210612_SB関東';
     const allFilesName = await fs.readdir(dirPath, { withFileTypes: true });
     console.log(allFilesName);
     const dirOnly = checkDir(allFilesName);
     for (let i = 0; i < dirOnly.length; i++) {
       console.log(dirOnly[i].name);
+      const new_ws_name = dirOnly[i].name;
+      xlsx.utils.book_append_sheet(new_wb, ws, new_ws_name);
+      xlsx.writeFile(new_wb, './test.xlsx');
+
       const innerDir = await fs.readdir(`${dirPath}/${dirOnly[i].name}`, { withFileTypes: true });
       console.log(innerDir);
       const innerDirOnly = checkDir(innerDir);
@@ -29,6 +41,12 @@ const xlsxTest = async () => {
         console.log(innerDirOnly[j].name);
         const innerDirInfiles = await fs.readdir(`${dirPath}/${dirOnly[i].name}/${innerDirOnly[j].name}`, { withFileTypes: true });
         console.log(innerDirInfiles);
+        const innerInnerDirOnly = checkDir(innerDirInfiles);
+        for (let k = 0; k < innerInnerDirOnly.length; k++) {
+          console.log(innerInnerDirOnly[k].name);
+          const innerInnerDirInFiles = await fs.readdir(`${dirPath}/${dirOnly[i].name}/${innerDirOnly[j].name}/${innerInnerDirOnly[k].name}`, { withFileTypes: true });
+          console.log(innerInnerDirInFiles);
+        }
       }
     }
   } catch (err) {
