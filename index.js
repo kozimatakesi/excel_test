@@ -19,32 +19,32 @@ const xlsxTest = async () => {
     const d = [['あ', 'い', 'う'], ['え', 'お']];
     const wb = xutil.book_new();
     const ws = xutil.aoa_to_sheet(d);
-    const ws_name = 'テストシート';
-    xutil.book_append_sheet(wb, ws, ws_name);
+    const wsName = 'テストシート';
+    xutil.book_append_sheet(wb, ws, wsName);
     xlsx.writeFile(wb, 'test.xlsx');
 
-    const new_wb = xlsx.readFile('./test.xlsx');
+    const newWb = xlsx.readFile('./test.xlsx');
     const dirPath = '/Users/kawamoto/Desktop/20210612_SB関東';
     const allFilesName = await fs.readdir(dirPath, { withFileTypes: true });
     console.log(allFilesName);
     const dirOnly = checkDir(allFilesName);
-    for (let i = 0; i < dirOnly.length; i++) {
-      console.log(dirOnly[i].name);
-      const new_ws_name = dirOnly[i].name;
-      xlsx.utils.book_append_sheet(new_wb, ws, new_ws_name);
-      xlsx.writeFile(new_wb, './test.xlsx');
+    for (const file of dirOnly) {
+      console.log(file.name);
+      const newWsName = file.name;
+      xlsx.utils.book_append_sheet(newWb, ws, newWsName);
+      xlsx.writeFile(newWb, './test.xlsx');
 
-      const innerDir = await fs.readdir(`${dirPath}/${dirOnly[i].name}`, { withFileTypes: true });
+      const innerDir = await fs.readdir(`${dirPath}/${file.name}`, { withFileTypes: true });
       console.log(innerDir);
       const innerDirOnly = checkDir(innerDir);
-      for (let j = 0; j < innerDirOnly.length; j++) {
-        console.log(innerDirOnly[j].name);
-        const innerDirInfiles = await fs.readdir(`${dirPath}/${dirOnly[i].name}/${innerDirOnly[j].name}`, { withFileTypes: true });
+      for (const innerFile of innerDirOnly) {
+        console.log(innerFile.name);
+        const innerDirInfiles = await fs.readdir(`${dirPath}/${file.name}/${innerFile.name}`, { withFileTypes: true });
         console.log(innerDirInfiles);
         const innerInnerDirOnly = checkDir(innerDirInfiles);
-        for (let k = 0; k < innerInnerDirOnly.length; k++) {
-          console.log(innerInnerDirOnly[k].name);
-          const innerInnerDirInFiles = await fs.readdir(`${dirPath}/${dirOnly[i].name}/${innerDirOnly[j].name}/${innerInnerDirOnly[k].name}`, { withFileTypes: true });
+        for (const innerInnerFile of innerInnerDirOnly) {
+          console.log(innerInnerFile.name);
+          const innerInnerDirInFiles = await fs.readdir(`${dirPath}/${file.name}/${innerFile.name}/${innerInnerFile.name}`, { withFileTypes: true });
           console.log(innerInnerDirInFiles);
         }
       }
@@ -60,9 +60,9 @@ const xlsxTest = async () => {
 
   let wb = xutil.book_new();
   let ws = xutil.aoa_to_sheet(d);
-  let ws_name = "シート1番目";
+  let wsName = "シート1番目";
 
-  xutil.book_append_sheet(wb, ws, ws_name);
+  xutil.book_append_sheet(wb, ws, wsName);
   xlsx.writeFile(wb, "test.xlsx");
  */
 
