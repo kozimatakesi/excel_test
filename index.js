@@ -6,9 +6,9 @@ const xutil = xlsx.utils;
 // ファイルの中でディレクトリのものだけを返す関数
 const checkDir = (array) => {
   const newArray = [];
-  for (let i = 0; i < array.length; i++) {
-    if (array[i].isDirectory()) {
-      newArray.push(array[i]);
+  for (const i of array) {
+    if (i.isDirectory()) {
+      newArray.push(i);
     }
   }
   return newArray;
@@ -33,7 +33,6 @@ const xlsxTest = async () => {
       const newWsName = file.name;
       xlsx.utils.book_append_sheet(newWb, ws, newWsName);
       xlsx.writeFile(newWb, './test.xlsx');
-
       const innerDir = await fs.readdir(`${dirPath}/${file.name}`, { withFileTypes: true });
       console.log(innerDir);
       const innerDirOnly = checkDir(innerDir);
