@@ -28,7 +28,7 @@ const xlsxTest = async () => {
     const allFilesName = await fs.readdir(dirPath, { withFileTypes: true });
     console.log(allFilesName);
     const dirOnly = checkDir(allFilesName);
-    for (const file of dirOnly) {
+    /*     for (const file of dirOnly) {
       console.log(file.name);
       const newWsName = file.name;
       xlsx.utils.book_append_sheet(newWb, ws, newWsName);
@@ -48,6 +48,19 @@ const xlsxTest = async () => {
         }
       }
     }
+ */
+
+    const dirSearchAndOpen = async (filesAndDirs, path) => {
+      if (checkDir(filesAndDirs).length === 0) {
+        return;
+      }
+      const dirsOnly = checkDir(filesAndDirs);
+      for (dir of dirsOnly) {
+        const innerDirFiles = await fs.readdir(`${path}/${dir}`, { withFileTypes: true });
+        path = `${path}/${dir}`;
+        dirSearchAndOpen(innerDirFiles, path);
+      }
+    };
   } catch (err) {
     console.log(err);
   }
